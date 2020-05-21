@@ -271,17 +271,17 @@ layui.use(["tree", "util","table","laydate"], function() {
     ,cols: [[
       {field:'', width:60,type:'numbers',title: '序号'}
       ,{field:'system_name', title: '系统',width:80,align:'center'}
-      ,{field:'point',  title: '地点',width:''}
+      ,{field:'point',  title: '地点',width:'300'}
       ,{field:'TypeName', title: '类型',width:100,align:'center'}
       ,{field:'_value', title: '值',width:80,align:'center'}
       //,{field:'ssMinValue', width:60, title: '单位',align:'center'}
       ,{field:'max_value', title: '最大值' ,width:80,align:'center'}
       ,{field:'min_value', title: '最小值' ,width:80,align:'center'}
-      ,{field:'startTime', title: '开始时间',width:200,align:'center'}
-      ,{field:'startTime', title: '结束时间',width:200,align:'center'}
+      ,{field:'startTime', title: '开始时间',width:170,align:'center'}
+      ,{field:'startTime', title: '结束时间',width:170,align:'center'}
       ,{field:'ssAlarmDuration', width:160, title: '持续时长',align:'center'}
-      ,{field:'max_time', width:200, title: '最大值时刻',align:'center'}
-      ,{field:'max_time', width:200, title: '最小值时刻',align:'center'}
+      ,{field:'max_time', width:170, title: '最大值时刻',align:'center'}
+      ,{field:'max_time', width:170, title: '最小值时刻',align:'center'}
     ]]
     ,where: {
       type:'[1,2,3]',
@@ -410,53 +410,53 @@ var ws = new WebSocket("ws://" + ipStrs + "/net/websocket/mongoAlarmList/" + ran
 ws.onopen = function (evt) {
   console.log("安全websocket连接成功");
 };
-ws.onmessage = function (event) {
-  if (typeof event.data === String) {
-//            console.log("Received data string");
-  }
-  if (event.data instanceof ArrayBuffer) {
-    var buffer = event.data;
-    console.log("Received arraybuffer");
-  }
-  if (event.data != null && event.data != '') {
-    var type = sessionStorage.getItem('type');
-    var parseData = $.parseJSON(event.data);
-    console.log('安全',parseData)
-    $("#staffTable").find("tr.all").remove();
-    $("#staffTable").find("tr.anquan").remove();
-    var tbody = ''
-    $.each(parseData, function (i, m) {
-      var index = i+1;
-      tbody += '<tr class="anquan">';
-      //tbody += '<td>'+index+'</td>';
-      tbody += '<td>安全</td>';
-      tbody += '<td class="left">'+m.ssTransducerPoint+'</td>';
-      tbody += '<td>'+m.ssTransducerTypeName+'</td>';
-      if(m.inOutType == '1'){
-        tbody += '<td>'+m.ssTransducerValue+''+m.company+'</td>';
-      }else{
-        tbody += '<td>'+m.ssTransducerValue+'</td>';
-      }
-      tbody += '<td>'+m.ssMaxValue+'</td>';
-      tbody += '<td>'+m.ssAlarmStime+'</td>';
-      tbody += '<td>'+m.ssAlarmDuration+'</td>';
-      tbody += '<td>'+m.ssMaxTime+'</td>';
-      tbody += '</tr>';
-    })
-    if(type.indexOf('1') !== -1 && type.indexOf('2') !== -1){
-      $("#staffTable").find("tr.renyuan").show();
-      $("#staffTable").find("tr.anquan").show();
-      $("#staffTable").append(tbody)
-    }else if(type.indexOf('1') !== -1 && type.indexOf('2') == -1){
-      $("#staffTable").find("tr.anquan").show();
-      $("#staffTable").find("tr.renyuan").hide();
-      $("#staffTable").append(tbody)
-    }else if(type.indexOf('1') == -1 && type.indexOf('2') !== -1){
-      $("#staffTable").find("tr.anquan").hide();
-      $("#staffTable").find("tr.renyuan").show();
-    }
-  }
-};
+//ws.onmessage = function (event) {
+//  if (typeof event.data === String) {
+////            console.log("Received data string");
+//  }
+//  if (event.data instanceof ArrayBuffer) {
+//    var buffer = event.data;
+//    console.log("Received arraybuffer");
+//  }
+//  if (event.data != null && event.data != '') {
+//    var type = sessionStorage.getItem('type');
+//    var parseData = $.parseJSON(event.data);
+//    console.log('安全',parseData)
+//    $("#staffTable").find("tr.all").remove();
+//    $("#staffTable").find("tr.anquan").remove();
+//    var tbody = ''
+//    $.each(parseData, function (i, m) {
+//      var index = i+1;
+//      tbody += '<tr class="anquan">';
+//      //tbody += '<td>'+index+'</td>';
+//      tbody += '<td>安全</td>';
+//      tbody += '<td class="left">'+m.ssTransducerPoint+'</td>';
+//      tbody += '<td>'+m.ssTransducerTypeName+'</td>';
+//      if(m.inOutType == '1'){
+//        tbody += '<td>'+m.ssTransducerValue+''+m.company+'</td>';
+//      }else{
+//        tbody += '<td>'+m.ssTransducerValue+'</td>';
+//      }
+//      tbody += '<td>'+m.ssMaxValue+'</td>';
+//      tbody += '<td>'+m.ssAlarmStime+'</td>';
+//      tbody += '<td>'+m.ssAlarmDuration+'</td>';
+//      tbody += '<td>'+m.ssMaxTime+'</td>';
+//      tbody += '</tr>';
+//    })
+//    if(type.indexOf('1') !== -1 && type.indexOf('2') !== -1){
+//      $("#staffTable").find("tr.renyuan").show();
+//      $("#staffTable").find("tr.anquan").show();
+//      $("#staffTable").append(tbody)
+//    }else if(type.indexOf('1') !== -1 && type.indexOf('2') == -1){
+//      $("#staffTable").find("tr.anquan").show();
+//      $("#staffTable").find("tr.renyuan").hide();
+//      $("#staffTable").append(tbody)
+//    }else if(type.indexOf('1') == -1 && type.indexOf('2') !== -1){
+//      $("#staffTable").find("tr.anquan").hide();
+//      $("#staffTable").find("tr.renyuan").show();
+//    }
+//  }
+//};
 
 
 var screen = function screen(type){

@@ -55,7 +55,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="stamp-list">
+                <div class="stamp-list" id="parent">
                     <table class="layui-table table1-tbody" id="staffTable">
                         <colgroup>
                             <!--<col width="60">-->
@@ -66,10 +66,12 @@
                             <col width="80">
                             <col width="180">
                             <col width="180">
-                            <col width="180">
+                            <col width="178">
                         </colgroup>
                     </table>
+                    <table class="layui-table table1-tbody" id="staffTables" style="margin-top: -10px"></table>
                 </div>
+
 
                 <!--<table class="layui-hide" id="tableData1"></table>-->
             </div>
@@ -95,7 +97,25 @@
 <script src="js/scrollbar.js"></script>
 <script src="js/index.js"></script>
 <script>
-    $('.stamp-list').mCustomScrollbar()
+//    $('.stamp-list').mCustomScrollbar();
+    (function () {
+        var parent = document.getElementById('parent');
+        var child1 = document.getElementById('staffTable');
+        var child2 = document.getElementById('staffTables');
+        child2.innerHTML = child1.innerHTML;
+        if($('#staffTable tr').size() > 5){
+            setInterval(function () {
+                if(parent.scrollTop >= child1.scrollHeight) {
+                    parent.scrollTop = 0;
+                } else {
+                    parent.scrollTop++;
+                }
+            }, 20);
+            console.log('top',top)
+        }
+
+    })()
+
 </script>
 </body>
 </html>
