@@ -69,7 +69,18 @@
                             <col width="178">
                         </colgroup>
                     </table>
-                    <table class="layui-table table1-tbody" id="staffTables" style="margin-top: -10px"></table>
+                    <table class="layui-table table1-tbody" id="staffTables" style="margin-top: -10px">
+                        <colgroup>
+                            <col width="60">
+                            <col width="">
+                            <col width="120">
+                            <col width="80">
+                            <col width="80">
+                            <col width="180">
+                            <col width="180">
+                            <col width="178">
+                        </colgroup>
+                    </table>
                 </div>
 
 
@@ -102,7 +113,7 @@
         var parent = document.getElementById('parent');
         var child1 = document.getElementById('staffTable');
         var child2 = document.getElementById('staffTables');
-        child2.innerHTML = child1.innerHTML;
+//        child2.innerHTML = child1.innerHTML;
         if($('#staffTable tr').size() > 5){
             setInterval(function () {
                 if(parent.scrollTop >= child1.scrollHeight) {

@@ -198,12 +198,18 @@ layui.use(["tree", "util","table","laydate"], function() {
       if(type.indexOf('1') == 1 && type.indexOf('2') == 1){
         $("#staffTable").find("tr.renyuan").show();
         $("#staffTable").find("tr.anquan").show();
+        $("#staffTables").find("tr.renyuan").show();
+        $("#staffTables").find("tr.anquan").show();
       }else if(type.indexOf('1') == 1 && type.indexOf('2') == -1){
         $("#staffTable").find("tr.anquan").show();
         $("#staffTable").find("tr.renyuan").hide();
+        $("#staffTables").find("tr.anquan").show();
+        $("#staffTables").find("tr.renyuan").hide();
       }else if(type.indexOf('1') == -1 && type.indexOf('2') == 1){
         $("#staffTable").find("tr.anquan").hide();
         $("#staffTable").find("tr.renyuan").show();
+        $("#staffTables").find("tr.anquan").hide();
+        $("#staffTables").find("tr.renyuan").show();
       }
       table.reload('tableData2', {
         where: {
@@ -228,41 +234,6 @@ layui.use(["tree", "util","table","laydate"], function() {
 
     }
   });
-  //table.render({
-  //  elem: '#tableData1'
-  //  ,url:ipStr+'/safe_pc/getAlarmListInfo'
-  //  ,cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-  //  ,height:'220px'
-  //  ,first: true //首次渲染表格
-  //  ,cols: [[
-  //    {field:'', width:60,fixed:'left',type:'numbers',title: '序号'}
-  //    ,{field:'system_name', title: '系统',width:80,align:'center'}
-  //    ,{field:'point',  title: '地点',width:''}
-  //    ,{field:'TypeName', title: '类型',width:100,align:'center'}
-  //    ,{field:'_value', title: '值',width:80,align:'center'}
-  //    //,{field:'ssMinValue', width:60, title: '单位',align:'center'}
-  //    ,{field:'max_value', title: '最大值' ,width:80,align:'center'}
-  //    ,{field:'startTime', title: '开始时间',width:170,align:'center'}
-  //    ,{field:'ssAlarmDuration', width:160, title: '持续时长',align:'center'}
-  //    ,{field:'max_time', width:170, title: '最大值时刻',align:'center'}
-  //  ]]
-  //  ,where: {
-  //    type:'[1,2,3]'
-  //  }
-  //  ,parseData: function(res) {
-  //    return {
-  //      "code":0,
-  //      msg:"",
-  //      count:res.total,
-  //      data:res.rows
-  //    }
-  //    if (this.first) {
-  //      this.first = false;
-  //    }
-  //  }
-  //  ,page: false
-  //  ,loading: true
-  //});
   table.render({
     elem: '#tableData2'
     ,height:'360'
@@ -330,6 +301,7 @@ function getmonitorInfo() {
     success: function (data) {
       var parseData = $.parseJSON(data);
       $("#staffTable").find("tr").remove();
+      $("#staffTables").find("tr").remove();
       var tbody = ''
       $.each(parseData.rows, function (i, m) {
         var index = i+1;
@@ -346,6 +318,13 @@ function getmonitorInfo() {
         tbody += '</tr>';
       })
       $("#staffTable").append(tbody)
+      if(parseData.rows.length > 5){
+        $("#staffTables").find("tr").remove()
+        $("#staffTables").append(tbody)
+      }else{
+        $("#staffTable tr td:last-child").css('width','149px');
+      }
+
     },
     error: function () {
       top.layer.msg("<span style='color:black'>查询失败!</span> ", {icon: 5, time: 1000});
@@ -378,6 +357,8 @@ wsPerson.onmessage = function (event) {
     console.log('人员',parseData)
     $("#staffTable").find("tr.all").remove();
     $("#staffTable").find("tr.renyuan").remove();
+    $("#staffTables").find("tr.all").remove();
+    $("#staffTables").find("tr.renyuan").remove();
     var tbody = '';
     if(parseData.length >0){
       tbody += '<tr class="renyuan">';
@@ -402,6 +383,12 @@ wsPerson.onmessage = function (event) {
       tbody += '</tr>';
     }
     $("#staffTable").append(tbody)
+    if(parseData.length > 5){
+      $("#staffTables").find("tr").remove()
+      $("#staffTables").append(tbody)
+    }else{
+      $("#staffTable tr td:last-child").css('width','149px');
+    }
   }
 };
 
@@ -410,53 +397,73 @@ var ws = new WebSocket("ws://" + ipStrs + "/net/websocket/mongoAlarmList/" + ran
 ws.onopen = function (evt) {
   console.log("安全websocket连接成功");
 };
-//ws.onmessage = function (event) {
-//  if (typeof event.data === String) {
-////            console.log("Received data string");
-//  }
-//  if (event.data instanceof ArrayBuffer) {
-//    var buffer = event.data;
-//    console.log("Received arraybuffer");
-//  }
-//  if (event.data != null && event.data != '') {
-//    var type = sessionStorage.getItem('type');
-//    var parseData = $.parseJSON(event.data);
-//    console.log('安全',parseData)
-//    $("#staffTable").find("tr.all").remove();
-//    $("#staffTable").find("tr.anquan").remove();
-//    var tbody = ''
-//    $.each(parseData, function (i, m) {
-//      var index = i+1;
-//      tbody += '<tr class="anquan">';
-//      //tbody += '<td>'+index+'</td>';
-//      tbody += '<td>安全</td>';
-//      tbody += '<td class="left">'+m.ssTransducerPoint+'</td>';
-//      tbody += '<td>'+m.ssTransducerTypeName+'</td>';
-//      if(m.inOutType == '1'){
-//        tbody += '<td>'+m.ssTransducerValue+''+m.company+'</td>';
-//      }else{
-//        tbody += '<td>'+m.ssTransducerValue+'</td>';
-//      }
-//      tbody += '<td>'+m.ssMaxValue+'</td>';
-//      tbody += '<td>'+m.ssAlarmStime+'</td>';
-//      tbody += '<td>'+m.ssAlarmDuration+'</td>';
-//      tbody += '<td>'+m.ssMaxTime+'</td>';
-//      tbody += '</tr>';
-//    })
-//    if(type.indexOf('1') !== -1 && type.indexOf('2') !== -1){
-//      $("#staffTable").find("tr.renyuan").show();
-//      $("#staffTable").find("tr.anquan").show();
-//      $("#staffTable").append(tbody)
-//    }else if(type.indexOf('1') !== -1 && type.indexOf('2') == -1){
-//      $("#staffTable").find("tr.anquan").show();
-//      $("#staffTable").find("tr.renyuan").hide();
-//      $("#staffTable").append(tbody)
-//    }else if(type.indexOf('1') == -1 && type.indexOf('2') !== -1){
-//      $("#staffTable").find("tr.anquan").hide();
-//      $("#staffTable").find("tr.renyuan").show();
-//    }
-//  }
-//};
+ws.onmessage = function (event) {
+  if (typeof event.data === String) {
+//            console.log("Received data string");
+  }
+  if (event.data instanceof ArrayBuffer) {
+    var buffer = event.data;
+    console.log("Received arraybuffer");
+  }
+  if (event.data != null && event.data != '') {
+    var type = sessionStorage.getItem('type');
+    var parseData = $.parseJSON(event.data);
+    console.log('安全',parseData)
+    $("#staffTable").find("tr.all").remove();
+    $("#staffTable").find("tr.anquan").remove();
+    $("#staffTables").find("tr.all").remove();
+    $("#staffTables").find("tr.anquan").remove();
+    var tbody = ''
+    $.each(parseData, function (i, m) {
+      var index = i+1;
+      tbody += '<tr class="anquan">';
+      //tbody += '<td>'+index+'</td>';
+      tbody += '<td>安全</td>';
+      tbody += '<td class="left">'+m.ssTransducerPoint+'</td>';
+      tbody += '<td>'+m.ssTransducerTypeName+'</td>';
+      if(m.inOutType == '1'){
+        tbody += '<td>'+m.ssTransducerValue+''+m.company+'</td>';
+      }else{
+        tbody += '<td>'+m.ssTransducerValue+'</td>';
+      }
+      tbody += '<td>'+m.ssMaxValue+'</td>';
+      tbody += '<td>'+m.ssAlarmStime+'</td>';
+      tbody += '<td>'+m.ssAlarmDuration+'</td>';
+      tbody += '<td>'+m.ssMaxTime+'</td>';
+      tbody += '</tr>';
+    })
+    if(type.indexOf('1') !== -1 && type.indexOf('2') !== -1){
+      $("#staffTable").find("tr.renyuan").show();
+      $("#staffTable").find("tr.anquan").show();
+      $("#staffTable").append(tbody)
+      $("#staffTables").find("tr.renyuan").show();
+      $("#staffTables").find("tr.anquan").show();
+      if(parseData.length > 5){
+        $("#staffTables").find("tr").remove()
+        $("#staffTables").append(tbody)
+      }else{
+        $("#staffTable tr td:last-child").css('width','149px');
+      }
+    }else if(type.indexOf('1') !== -1 && type.indexOf('2') == -1){
+      $("#staffTable").find("tr.anquan").show();
+      $("#staffTable").find("tr.renyuan").hide();
+      $("#staffTable").append(tbody)
+      $("#staffTables").find("tr.anquan").show();
+      $("#staffTables").find("tr.renyuan").hide();
+      if(parseData.length > 5){
+        $("#staffTables").find("tr").remove()
+        $("#staffTables").append(tbody)
+      }else{
+        $("#staffTable tr td:last-child").css('width','149px');
+      }
+    }else if(type.indexOf('1') == -1 && type.indexOf('2') !== -1){
+      $("#staffTable").find("tr.anquan").hide();
+      $("#staffTable").find("tr.renyuan").show();
+      $("#staffTables").find("tr.anquan").hide();
+      $("#staffTables").find("tr.renyuan").show();
+    }
+  }
+};
 
 
 var screen = function screen(type){
